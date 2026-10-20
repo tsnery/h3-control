@@ -1,0 +1,63 @@
+{
+  "startedAt": "2026-10-19T18:55:48.575Z",
+  "deviceId": "84:AC:60:26:F5:68",
+  "deviceName": "QCY H3-APP",
+  "steps": [
+    {
+      "label": "ReadEq",
+      "txHex": "FE DC BA C0 FF 00 04 00 FE 01 22 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 4D 00 00 22 49 01 DA FD 37 00 FA 00 28 00 02 DC 00 B4 FB 50 00 02 F4 01 64 00 46 00 02 E8 03 00 00 46 00 02 08 07 FA 00 64 00 02 F0 0A 2C 01 50 00 02 4C 1D FA 00 78 00 02 94 11 C8 00 82 00 02 8A 28 00 00 46 00 02 60 54 00 00 46 00 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 0,
+          "status": 0,
+          "payloadHex": "22 49 01 DA FD 37 00 FA 00 28 00 02 DC 00 B4 FB 50 00 02 F4 01 64 00 46 00 02 E8 03 00 00 46 00 02 08 07 FA 00 64 00 02 F0 0A 2C 01 50 00 02 4C 1D FA 00 78 00 02 94 11 C8 00 82 00 02 8A 28 00 00 46 00 02 60 54 00 00 46 00 02"
+        }
+      ],
+      "elapsedMs": 22,
+      "error": null
+    },
+    {
+      "label": "RewriteCurrentEq",
+      "txHex": "FE DC BA C0 FF 00 4C 01 22 49 01 DA FD 37 00 FA 00 28 00 02 DC 00 B4 FB 50 00 02 F4 01 64 00 46 00 02 08 07 FA 00 64 00 02 F0 0A 2C 01 50 00 02 94 11 C8 00 82 00 02 4C 1D FA 00 78 00 02 E8 03 00 00 46 00 02 10 27 00 00 46 00 02 F0 55 00 00 46 00 02 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 02 00 01 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 1,
+          "status": 0,
+          "payloadHex": ""
+        }
+      ],
+      "elapsedMs": 60,
+      "error": null
+    },
+    {
+      "label": "ReadEq",
+      "txHex": "FE DC BA C0 FF 00 04 02 FE 01 22 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 4D 00 02 22 49 01 DA FD 37 00 FA 00 28 00 02 DC 00 B4 FB 50 00 02 F4 01 64 00 46 00 02 08 07 FA 00 64 00 02 F0 0A 2C 01 50 00 02 94 11 C8 00 82 00 02 4C 1D FA 00 78 00 02 E8 03 00 00 46 00 02 10 27 00 00 46 00 02 F0 55 00 00 46 00 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 2,
+          "status": 0,
+          "payloadHex": "22 49 01 DA FD 37 00 FA 00 28 00 02 DC 00 B4 FB 50 00 02 F4 01 64 00 46 00 02 08 07 FA 00 64 00 02 F0 0A 2C 01 50 00 02 94 11 C8 00 82 00 02 4C 1D FA 00 78 00 02 E8 03 00 00 46 00 02 10 27 00 00 46 00 02 F0 55 00 00 46 00 02"
+        }
+      ],
+      "elapsedMs": 28,
+      "error": null
+    }
+  ],
+  "pushes": [],
+  "fatalError": null
+}

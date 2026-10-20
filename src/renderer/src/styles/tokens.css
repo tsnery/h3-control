@@ -1,0 +1,54 @@
+:root {
+  color-scheme: dark;
+
+  --void: #120A1C;
+  --hull: #1F1233;
+  --armor: #6E3FB8;
+  /* --armor reaches only 2.82:1 on --void; borders and tracks that carry meaning need 3:1. */
+  --armor-edge: #8456D1;
+  --sync: #A6F03C;
+  --sync-hover: #C1F57A;
+  --bone: #EEE8F7;
+  --haze: #A99BC2;
+  --haze-dim: #5E536F;
+  --hull-hover: #2E1A4C;
+
+  --surface: var(--void);
+
+  --font-display: 'Shippori Mincho B1', 'Yu Mincho', serif;
+  --font-ui: 'Barlow Semi Condensed', 'Segoe UI', sans-serif;
+
+  --cut: 8px;
+  --cut-inner: calc(var(--cut) - 0.41px);
+  --chamfer: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut))
+  );
+  --chamfer-inner: polygon(
+    0 0,
+    calc(100% - var(--cut-inner)) 0,
+    100% var(--cut-inner),
+    100% 100%,
+    var(--cut-inner) 100%,
+    0 calc(100% - var(--cut-inner))
+  );
+}
+
+@media (forced-colors: active) {
+  :root {
+    --void: Canvas;
+    --hull: Canvas;
+    --armor: CanvasText;
+    --armor-edge: CanvasText;
+    --sync: Highlight;
+    --sync-hover: Highlight;
+    --bone: CanvasText;
+    --haze: CanvasText;
+    --haze-dim: GrayText;
+    --hull-hover: Canvas;
+  }
+}

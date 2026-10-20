@@ -1,0 +1,28 @@
+appId: digital.local.h3control
+productName: H3 Control
+directories:
+  output: dist
+files:
+  - out/**
+  - package.json
+asarUnpack:
+  - node_modules/webbluetooth/**
+  - node_modules/@webbluetooth/**
+extraResources:
+  - from: resources/volume-host.ps1
+    to: volume-host.ps1
+  - from: resources/tray-icon.png
+    to: tray-icon.png
+  - from: resources/icon.ico
+    to: icon.ico
+afterPack: scripts/apply-fuses.cjs
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: resources/icon.ico
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true

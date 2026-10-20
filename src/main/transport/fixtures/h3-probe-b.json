@@ -1,0 +1,132 @@
+{
+  "startedAt": "2026-10-19T18:40:33.169Z",
+  "deviceId": "84:AC:60:26:F5:68",
+  "deviceName": "QCY H3-APP",
+  "steps": [
+    {
+      "label": "PreflightReadAnc",
+      "txHex": "FE DC BA C0 FF 00 04 00 FE 01 17 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 07 00 00 17 03 01 01 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 0,
+          "status": 0,
+          "payloadHex": "17 03 01 01 02"
+        }
+      ],
+      "elapsedMs": 26,
+      "error": null
+    },
+    {
+      "label": "ReadAnc",
+      "txHex": "FE DC BA C0 FF 00 04 01 FE 01 17 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 07 00 01 17 03 01 01 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 1,
+          "status": 0,
+          "payloadHex": "17 03 01 01 02"
+        }
+      ],
+      "elapsedMs": 20,
+      "error": null
+    },
+    {
+      "label": "SetAncTransparency",
+      "txHex": "FE DC BA C0 FF 00 06 02 17 03 03 01 04 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 02 00 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 2,
+          "status": 0,
+          "payloadHex": ""
+        }
+      ],
+      "elapsedMs": 91,
+      "error": null
+    },
+    {
+      "label": "ManualAncButton",
+      "txHex": "",
+      "rxChunksHex": [],
+      "rxFrames": [],
+      "elapsedMs": 30006,
+      "error": null
+    },
+    {
+      "label": "ReadAnc",
+      "txHex": "FE DC BA C0 FF 00 04 03 FE 01 17 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 07 00 03 17 03 01 01 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 3,
+          "status": 0,
+          "payloadHex": "17 03 01 01 02"
+        }
+      ],
+      "elapsedMs": 99,
+      "error": null
+    },
+    {
+      "label": "RestoreAnc",
+      "txHex": "FE DC BA C0 FF 00 06 04 17 03 01 01 02 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 02 00 04 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 4,
+          "status": 0,
+          "payloadHex": ""
+        }
+      ],
+      "elapsedMs": 118,
+      "error": null
+    },
+    {
+      "label": "ReadAnc",
+      "txHex": "FE DC BA C0 FF 00 04 05 FE 01 17 EF",
+      "rxChunksHex": [
+        "FE DC BA 00 FF 00 07 00 05 17 03 01 01 02 EF"
+      ],
+      "rxFrames": [
+        {
+          "kind": "response",
+          "opcode": 255,
+          "sn": 5,
+          "status": 0,
+          "payloadHex": "17 03 01 01 02"
+        }
+      ],
+      "elapsedMs": 420,
+      "error": null
+    }
+  ],
+  "pushes": [
+    {
+      "atMs": 22333,
+      "opcode": 255,
+      "sn": 4,
+      "payloadHex": "17 03 01 01 02"
+    }
+  ],
+  "fatalError": null
+}
