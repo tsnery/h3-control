@@ -54,6 +54,13 @@ test.describe('fake headset session', () => {
     await expect(page.getByText(COPY.battery(FAKE_BATTERY_PERCENT))).toBeVisible()
   })
 
+  test('shows that game mode is off on the fake headset', async () => {
+    const { page } = current()
+    await waitUntilConnected()
+    await expect(page.getByText(COPY.gameMode.off, { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: COPY.rename.trigger })).toBeEnabled()
+  })
+
   test('changes ANC to Transparência and keeps it after the next poll', async () => {
     test.setTimeout(POLL_TEST_TIMEOUT_MS)
     const { page } = current()

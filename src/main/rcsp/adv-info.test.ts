@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { AdvType, decodeAdvInfo, decodeBattery, encodeAdvGetMask, encodeAdvSet } from './adv-info'
+import {
+  AdvType,
+  decodeAdvInfo,
+  decodeBattery,
+  decodeGameMode,
+  encodeAdvGetMask,
+  encodeAdvSet,
+} from './adv-info'
 
 describe('encodeAdvSet', () => {
   it('writes length including the type, then type and value', () => {
@@ -57,5 +64,22 @@ describe('decodeBattery', () => {
 
   it('returns null for an empty value', () => {
     expect(decodeBattery(new Uint8Array())).toBeNull()
+  })
+})
+
+describe('decodeGameMode', () => {
+  it('reads work mode 2 as game mode on', () => {
+    expect(decodeGameMode(Uint8Array.of(0x02))).toBe(true)
+  })
+
+  it('reads work mode 1 as game mode off', () => {
+    expect(decodeGameMode(Uint8Array.of(0x01))).toBe(false)
+  })
+
+  it.each([
+    ['an unknown work mode', Uint8Array.of(0x03)],
+    ['an empty value', new Uint8Array()],
+  ])('returns null for %s', (_case, value) => {
+    expect(decodeGameMode(value)).toBeNull()
   })
 })

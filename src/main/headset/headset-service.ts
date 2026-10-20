@@ -9,7 +9,7 @@ import { ANC_CMD_ID, decodeAncSetting } from '../h3/anc'
 import { type EqTlvFormat, decodeEqTlv, toEqState } from '../h3/eq'
 import { type H3Command, h3Commands } from '../h3/h3-commands'
 import { eqFormatForFirmware, isSupportedTarget } from '../h3/h3-model'
-import { AdvType, type BatteryLevel, decodeAdvInfo, decodeBattery } from '../rcsp/adv-info'
+import { AdvType, decodeAdvInfo, decodeBattery, decodeGameMode } from '../rcsp/adv-info'
 import type { RcspCommandFrame, RcspResponseFrame } from '../rcsp/frame'
 import { Opcode } from '../rcsp/opcode'
 import { decodeTlvs } from '../rcsp/qcy-tlv'
@@ -75,11 +75,12 @@ const INITIAL_SNAPSHOT: HeadsetSnapshot = {
   name: null,
   firmwareVersion: null,
   battery: null,
+  gameMode: null,
   anc: null,
   eq: null,
 }
 
-const LIVE_FIELDS_CLEARED = { battery: null, anc: null, eq: null } as const
+const LIVE_FIELDS_CLEARED = { battery: null, gameMode: null, anc: null, eq: null } as const
 
 const nameDecoder = new TextDecoder()
 
@@ -99,9 +100,14 @@ function decodeEqPayload(payload: Uint8Array, format: EqTlvFormat): EqState | nu
   return decoded === null ? { kind: 'unknown' } : toEqState(decoded)
 }
 
-function decodeBatteryPayload(payload: Uint8Array): BatteryLevel | null {
-  const value = decodeAdvInfo(payload).get(AdvType.Battery)
-  return value === undefined ? null : decodeBattery(value)
+function decodeHeadsetStatus(payload: Uint8Array): Pick<HeadsetSnapshot, 'battery' | 'gameMode'> {
+  const values = decodeAdvInfo(payload)
+  const battery = values.get(AdvType.Battery)
+  const workMode = values.get(AdvType.WorkMode)
+  return {
+    battery: battery === undefined ? null : decodeBattery(battery),
+    gameMode: workMode === undefined ? null : decodeGameMode(workMode),
+  }
 }
 
 function decodeNamePayload(payload: Uint8Array): string | null {
@@ -268,10 +274,12 @@ export function createHeadsetService(deps: HeadsetServiceDeps): HeadsetService {
     update({ anc: setting })
   }
 
-  const refreshBattery = async (session: Session): Promise<void> => {
+  const refreshStatus = async (session: Session): Promise<void> => {
     const response = await exchange(session, h3Commands.readBattery())
-    const battery = response === null ? null : decodeBatteryPayload(response.payload)
-    if (battery !== null && current === session) update({ battery })
+    if (response === null || current !== session) return
+    const { battery, gameMode } = decodeHeadsetStatus(response.payload)
+    if (battery !== null) update({ battery })
+    update({ gameMode })
   }
 
   const refreshName = async (session: Session): Promise<void> => {
@@ -300,7 +308,7 @@ export function createHeadsetService(deps: HeadsetServiceDeps): HeadsetService {
       persist('preferredDeviceId', session.link.deviceId)
       await exchange(session, h3Commands.syncTime(new Date()))
     }
-    await refreshBattery(session)
+    await refreshStatus(session)
     await refreshName(session)
     await refreshAnc(session)
     await refreshEq(session, profile.eqFormat)
@@ -316,7 +324,7 @@ export function createHeadsetService(deps: HeadsetServiceDeps): HeadsetService {
   }
 
   const pollOnce = async (session: Session): Promise<void> => {
-    await refreshBattery(session)
+    await refreshStatus(session)
     await refreshAnc(session)
   }
 

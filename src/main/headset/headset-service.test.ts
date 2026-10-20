@@ -162,6 +162,7 @@ describe('createHeadsetService', () => {
         name: null,
         firmwareVersion: null,
         battery: null,
+        gameMode: null,
         anc: null,
         eq: null,
       })
@@ -179,6 +180,7 @@ describe('createHeadsetService', () => {
         name: 'QCY H3',
         firmwareVersion: '0.9.1.2',
         battery: { percent: 50, charging: false },
+        gameMode: false,
         anc: DEFAULT_NOISE_CANCELLING,
         eq: { kind: 'preset', presetId: 1 },
       })
@@ -304,6 +306,16 @@ describe('createHeadsetService', () => {
       expect(harness.labels().slice(setupFrames)).toEqual(['ReadBattery', 'ReadAnc', 'ReadBattery', 'ReadAnc'])
     })
 
+    it('picks up game mode switched on the headset at the next poll', async () => {
+      const harness = createHarness()
+      await startConnected(harness)
+
+      harness.fake.pressGameModeButton(true)
+      await advance(POLL_INTERVAL_MS)
+
+      expect(harness.service.getSnapshot().gameMode).toBe(true)
+    })
+
     it('applies an ANC change pushed by the physical button', async () => {
       const harness = createHarness()
       await startConnected(harness)
@@ -400,6 +412,7 @@ describe('createHeadsetService', () => {
         status: 'reconnecting',
         name: 'QCY H3',
         battery: null,
+        gameMode: null,
         anc: null,
         eq: null,
       })

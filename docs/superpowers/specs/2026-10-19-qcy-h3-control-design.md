@@ -13,7 +13,7 @@ O app é um painel de controle de desktop que fala com o fone pelo mesmo protoco
 **Objetivos (v1)**
 
 1. Encontrar e conectar sozinho ao fone (sem escolher dispositivo numa lista) e reconectar quando ele voltar.
-2. Mostrar estado: conectado ou não, bateria (%) e versão do firmware.
+2. Mostrar estado: conectado ou não, bateria (%), versão do firmware e se o modo jogo está ligado (só leitura; o dono liga pelo botão do fone).
 3. ANC: Desligado, Transparência e Cancelamento de ruído com cenas (Adaptativo, Ambiente barulhento, Deslocamento, Ambiente interno — cada um com nível baixo/médio/alto — e Antivento). Refletir mudanças feitas pelo botão físico.
 4. Equalizador: 6 perfis prontos (Padrão, Pop, Graves, Rock, Suave, Clássico) e um perfil personalizado de 10 bandas.
 5. Renomear o fone.
@@ -23,7 +23,7 @@ O app é um painel de controle de desktop que fala com o fone pelo mesmo protoco
 
 **Não-objetivos (v1)**
 
-- Atualização de firmware (OTA), reset de fábrica, limpar pareamentos, remapear botões, LEDs, modo jogo, balanço de canais.
+- Atualização de firmware (OTA), reset de fábrica, limpar pareamentos, remapear botões, LEDs, ligar ou desligar o modo jogo pelo app, balanço de canais.
 - Outros modelos QCY. O código deve deixar espaço para eles (camada de protocolo separada da de modelo), mas só o H3 (vendorId 16755 e 16760) é suportado.
 - macOS e Linux. Auto-update. Assinatura de código (v1 sai sem assinatura).
 - Conta QCY, login ou qualquer funcionalidade de nuvem do app oficial.
@@ -117,6 +117,7 @@ renderer (React)  ──IPC tipado (contextBridge + zod)──>  main
 "—" = banda ausente no perfil (não é enviada). A fonte de verdade é o JSON; a tabela é para leitura.
 | Renomear | `C0` + `<N+1> 01 <UTF-8>` | Máx. 31 bytes UTF-8, sem espaços nas pontas, não vazio. Avisar que o Windows pode manter o nome antigo até reparear |
 | Bateria | `C1 00 00 0D 21` | Mostrar % e se está carregando |
+| Modo jogo | Mesma leitura `C1 00 00 0D 21`, ADV tipo 5 (2 = jogo, 1 = normal) | Etiqueta "Modo jogo" / "Modo jogo desligado"; some se o valor for desconhecido. Com o modo ligado, "Renomear" fica desabilitado com o motivo, porque o fone recusa renomear nesse estado |
 | Firmware | GetTargetInfo tipo 5 | Exibir `a.b.c.d` |
 | Volume | Volume do endpoint de áudio do Windows correspondente ao fone (o que o AVRCP já sincroniza) | Ver §6. Não usar RCSP para volume |
 
@@ -127,7 +128,7 @@ renderer (React)  ──IPC tipado (contextBridge + zod)──>  main
 - **EQ**: seletor de perfil + 10 sliders verticais (rótulo da frequência, `aria-valuetext` "+3 dB"), que mostram a curva do perfil ativo ou escolhido (slider limitado a ±8 dB; texto com o valor real, ex. "−12 dB"), botão "Aplicar" e "Restaurar". Mudanças só vão ao fone ao aplicar (evita inundar o fone com escritas).
 - **Bandeja**: ícone com tooltip (nome + bateria), menu com itens de rádio para ANC (Desligado / Transparência / Cancelamento), "Abrir" e "Sair". Fechar a janela esconde para a bandeja. Opção "Iniciar com o Windows" (desligada por padrão).
 - **Estados**: "Procurando fone…", "Conectado", "Desconectado — tentando de novo", erros com botão "Tentar de novo". Sem fone, a UI mostra instruções (ligar o fone, Bluetooth do PC ligado).
-- **Acessibilidade** (WCAG 2.2 AA, que inclui 2.0): controles nativos (`<input type="radio">`, `<input type="range">`) em `<fieldset>`/`<legend>`; navegação completa por teclado; foco visível; contraste 4,5:1; região `aria-live="polite"` para conexão, bateria e mudanças de ANC; respeitar `prefers-reduced-motion` e `forced-colors`.
+- **Acessibilidade** (WCAG 2.2 AA, que inclui 2.0): controles nativos (`<input type="radio">`, `<input type="range">`) em `<fieldset>`/`<legend>`; navegação completa por teclado; foco visível; contraste 4,5:1; região `aria-live="polite"` para conexão, bateria, modo jogo e mudanças de ANC; respeitar `prefers-reduced-motion` e `forced-colors`.
 - Tema claro/escuro seguindo o Windows.
 
 ## 6. Pendências com dono decidido ou a decidir

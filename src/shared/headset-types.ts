@@ -66,6 +66,7 @@ export const HeadsetSnapshotSchema = z.object({
   name: z.string().nullable(),
   firmwareVersion: z.string().nullable(),
   battery: z.object({ percent: z.number(), charging: z.boolean() }).nullable(),
+  gameMode: z.boolean().nullable(),
   anc: AncSettingSchema.nullable(),
   eq: EqStateSchema.nullable(),
 })

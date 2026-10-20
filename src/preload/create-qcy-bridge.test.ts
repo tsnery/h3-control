@@ -10,6 +10,7 @@ const SNAPSHOT: HeadsetSnapshot = {
   name: 'QCY H3',
   firmwareVersion: null,
   battery: null,
+  gameMode: null,
   anc: null,
   eq: null,
 }

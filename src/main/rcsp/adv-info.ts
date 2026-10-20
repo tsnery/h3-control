@@ -14,6 +14,8 @@ const CHARGING_BIT = 0x80
 const PERCENT_MASK = 0x7f
 const MAX_PERCENT = 100
 
+const GAME_MODE_BY_WORK_MODE: Readonly<Record<number, boolean>> = { 1: false, 2: true }
+
 export function encodeAdvSet(type: AdvType, value: Uint8Array): Uint8Array {
   return Uint8Array.of(value.length + 1, type, ...value)
 }
@@ -47,4 +49,10 @@ export function decodeBattery(value: Uint8Array): BatteryLevel | null {
   const percent = headset & PERCENT_MASK
   if (percent < 1 || percent > MAX_PERCENT) return null
   return { percent, charging: (headset & CHARGING_BIT) !== 0 }
+}
+
+export function decodeGameMode(value: Uint8Array): boolean | null {
+  const workMode = value[0]
+  if (workMode === undefined) return null
+  return GAME_MODE_BY_WORK_MODE[workMode] ?? null
 }

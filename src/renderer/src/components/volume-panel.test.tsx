@@ -16,6 +16,7 @@ const SNAPSHOT: HeadsetSnapshot = {
   name: null,
   firmwareVersion: null,
   battery: null,
+  gameMode: null,
   anc: null,
   eq: null,
 }

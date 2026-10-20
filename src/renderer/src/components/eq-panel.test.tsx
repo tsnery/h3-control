@@ -21,6 +21,7 @@ const CONNECTED: HeadsetSnapshot = {
   name: 'QCY H3',
   firmwareVersion: '0.1.2.3',
   battery: { percent: 30, charging: false },
+  gameMode: null,
   anc: { mode: 'off' },
   eq: { kind: 'preset', presetId: 1 },
 }

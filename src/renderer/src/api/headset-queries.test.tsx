@@ -12,6 +12,7 @@ const SEARCHING: HeadsetSnapshot = {
   name: null,
   firmwareVersion: null,
   battery: null,
+  gameMode: null,
   anc: null,
   eq: null,
 }

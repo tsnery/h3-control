@@ -14,6 +14,7 @@ const CONNECTED: HeadsetSnapshot = {
   name: 'QCY H3',
   firmwareVersion: '0.1.2.3',
   battery: { percent: 30, charging: false },
+  gameMode: null,
   anc: { mode: 'off' },
   eq: { kind: 'preset', presetId: 1 },
 }
@@ -51,6 +52,22 @@ describe('rename trigger', () => {
   ])('is disabled when %s', async (_label, override) => {
     renderApp({ ...CONNECTED, ...override })
     expect(await screen.findByRole('button', { name: COPY.rename.trigger })).toBeDisabled()
+  })
+
+  it('is disabled and says why while game mode is on', async () => {
+    renderApp({ ...CONNECTED, gameMode: true })
+
+    const trigger = await screen.findByRole('button', { name: COPY.rename.trigger })
+    expect(trigger).toBeDisabled()
+    expect(trigger).toHaveAccessibleDescription(COPY.rename.blockedByGameMode)
+    expect(screen.getByText(COPY.rename.blockedByGameMode)).toBeVisible()
+  })
+
+  it('stays enabled without the game mode reason while game mode is off', async () => {
+    renderApp({ ...CONNECTED, gameMode: false })
+
+    expect(await screen.findByRole('button', { name: COPY.rename.trigger })).toBeEnabled()
+    expect(screen.queryByText(COPY.rename.blockedByGameMode)).not.toBeInTheDocument()
   })
 })
 

@@ -22,6 +22,10 @@ export const COPY = {
   battery: (percent: number) => `Bateria ${percent}%`,
   charging: 'carregando',
   firmware: (version: string) => `Firmware ${version}`,
+  gameMode: {
+    on: 'Modo jogo',
+    off: 'Modo jogo desligado',
+  },
   readOnly: {
     unexpectedVendor: 'Este fone não parece ser um QCY H3. Os ajustes estão bloqueados por segurança.',
   },
@@ -76,6 +80,7 @@ export const COPY = {
     cancel: 'Cancelar',
     close: 'Fechar',
     cachingNote: 'O Windows pode mostrar o nome antigo até você parear o fone de novo.',
+    blockedByGameMode: 'Para renomear, desligue o modo jogo no fone.',
   },
   volume: {
     title: 'Volume',

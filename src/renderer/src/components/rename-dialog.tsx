@@ -76,13 +76,26 @@ export function RenameDialog({ open, onClose }: RenameDialogProps) {
 export function RenameButton() {
   const snapshot = useHeadsetSnapshot()
   const [open, setOpen] = useState(false)
-  const disabled = snapshot.status !== 'connected' || snapshot.readOnly !== null
+  const blockedReasonId = useId()
+  const blockedByGameMode = snapshot.gameMode === true
+  const disabled = snapshot.status !== 'connected' || snapshot.readOnly !== null || blockedByGameMode
 
   return (
     <>
-      <button type="button" className="rename-trigger" disabled={disabled} onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className="rename-trigger"
+        disabled={disabled}
+        aria-describedby={blockedByGameMode ? blockedReasonId : undefined}
+        onClick={() => setOpen(true)}
+      >
         {COPY.rename.trigger}
       </button>
+      {blockedByGameMode ? (
+        <p id={blockedReasonId} className="rename-blocked-note">
+          {COPY.rename.blockedByGameMode}
+        </p>
+      ) : null}
       <RenameDialog open={open} onClose={() => setOpen(false)} />
     </>
   )

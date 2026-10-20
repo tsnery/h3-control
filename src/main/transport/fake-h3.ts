@@ -17,6 +17,7 @@ export type FakeH3State = {
   batteryPercent: number
   anc: AncSetting
   eqIndex: number
+  gameMode: boolean
   vendorId: number
   firmwareVersion: string
   respondsToTargetInfo: boolean
@@ -28,6 +29,7 @@ export type FakeH3 = {
   state: () => FakeH3State
   writtenFrames: () => Uint8Array[]
   pressAncButton(setting: AncSetting): void
+  pressGameModeButton(on: boolean): void
   powerOff(): void
   powerOffSilently(): void
   powerOn(): void
@@ -39,6 +41,7 @@ const DEFAULT_STATE: FakeH3State = {
   batteryPercent: 50,
   anc: DEFAULT_NOISE_CANCELLING,
   eqIndex: 1,
+  gameMode: false,
   vendorId: 0x1c52,
   firmwareVersion: '0.9.1.2',
   respondsToTargetInfo: true,
@@ -52,7 +55,8 @@ const FIRMWARE_TYPE = 5
 const IDS_TYPE = 10
 const HEX_RADIX = 16
 const SLEEP_VALUE = 0x02
-const WORK_MODE_VALUE = 0x01
+const WORK_MODE_NORMAL = 0x01
+const WORK_MODE_GAME = 0x02
 const DEFAULT_EQ_INDEX = 1
 const CAPTURED_TARGET_INFO_HEX =
   '02 00 20 05 01 00 00 00 01 09 02 84 AC 60 83 27 E1 8E 01 07 04 00 00 00 01 00 00 03 05 09 12 02 06 0A 03 07 1B 34 04 08 01 00 01 04 09 00 00 00 05 0A 1C 52 41 73 11 0B 68 45 39 79 66 73 65 58 36 55 64 4B 37 72 46 68 15 0C 6A 6C 5F 73 64 6B 5F 61 63 36 39 37 5F 70 75 62 6C 69 73 68 05 0D 01 10 02 1C 08 11 00 84 AC 60 26 F5 68 02 12 00 03 13 06 00 05 15 00 00 00 00'
@@ -113,7 +117,7 @@ const advInfoReply = (state: FakeH3State, request: Uint8Array): Reply => {
   const mask = new DataView(request.buffer, request.byteOffset, request.byteLength).getUint32(0)
   const available: [AdvType, Uint8Array][] = [
     [AdvType.Sleep, Uint8Array.of(SLEEP_VALUE)],
-    [AdvType.WorkMode, Uint8Array.of(WORK_MODE_VALUE)],
+    [AdvType.WorkMode, Uint8Array.of(state.gameMode ? WORK_MODE_GAME : WORK_MODE_NORMAL)],
     [AdvType.Battery, Uint8Array.of(state.batteryPercent, 0, 0)],
     [AdvType.Name, new TextEncoder().encode(state.name)],
   ]
@@ -266,6 +270,9 @@ export const createFakeH3 = (initial: Partial<FakeH3State> = {}): FakeH3 => {
       if (live === null) return
       live.notify(encodeAncPushFrame(setting, pushSn))
       pushSn = (pushSn + 1) % SN_MODULUS
+    },
+    pressGameModeButton: (on) => {
+      state.gameMode = on
     },
     powerOff: () => {
       powered = false

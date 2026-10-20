@@ -12,6 +12,7 @@ const CONNECTED: HeadsetSnapshot = {
   name: 'QCY H3',
   firmwareVersion: '0.1.2.3',
   battery: { percent: 30, charging: false },
+  gameMode: null,
   anc: null,
   eq: null,
 }
@@ -22,6 +23,7 @@ const SEARCHING: HeadsetSnapshot = {
   name: null,
   firmwareVersion: null,
   battery: null,
+  gameMode: null,
   anc: null,
   eq: null,
 }
@@ -93,5 +95,34 @@ describe('ConnectionHeader', () => {
     )
 
     expect(await screen.findByText(COPY.battery(55))).toBeInTheDocument()
+  })
+
+  describe('game mode', () => {
+    it.each([
+      ['on', true, COPY.gameMode.on],
+      ['off', false, COPY.gameMode.off],
+    ])('shows game mode %s', async (_state, gameMode, text) => {
+      renderHeader({ ...CONNECTED, gameMode })
+
+      expect(await screen.findByText(text)).toBeInTheDocument()
+    })
+
+    it('shows nothing about game mode while its state is unknown', async () => {
+      renderHeader(CONNECTED)
+      await screen.findByText(COPY.connected)
+
+      expect(screen.queryByText(COPY.gameMode.on)).not.toBeInTheDocument()
+      expect(screen.queryByText(COPY.gameMode.off)).not.toBeInTheDocument()
+    })
+
+    it('announces a game mode switch from the headset politely', async () => {
+      const bridge = renderHeader({ ...CONNECTED, gameMode: false })
+      const region = await screen.findByText(COPY.gameMode.off)
+      expect(region).toHaveAttribute('aria-live', 'polite')
+
+      await act(async () => bridge.emitSnapshot({ ...CONNECTED, gameMode: true }))
+
+      await waitFor(() => expect(region).toHaveTextContent(COPY.gameMode.on))
+    })
   })
 })

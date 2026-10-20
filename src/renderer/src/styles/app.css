@@ -53,6 +53,12 @@ main > .rename-trigger {
   margin-top: 0.75rem;
 }
 
+.rename-blocked-note {
+  margin-top: 0.5rem;
+  color: var(--haze);
+  font-size: 0.875rem;
+}
+
 .connection-header {
   display: flex;
   flex-wrap: wrap;
@@ -141,6 +147,50 @@ main > .rename-trigger {
 .battery-cell[data-filled='true'] {
   border-color: var(--sync);
   background: var(--sync);
+}
+
+/* Game mode is read-only: a chamfered tag shaped like the choice tiles, with no hover or pointer. */
+.game-mode-tag {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.125rem 0.75rem;
+  color: var(--haze);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.game-mode-tag::before,
+.game-mode-tag::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+
+.game-mode-tag::before {
+  inset: 0;
+  background: var(--haze-dim);
+  clip-path: var(--chamfer);
+}
+
+.game-mode-tag::after {
+  inset: 1px;
+  background: var(--surface);
+  clip-path: var(--chamfer-inner);
+}
+
+.game-mode-tag[data-on='true'] {
+  color: var(--void);
+}
+
+.game-mode-tag[data-on='true']::before {
+  background: var(--sync);
+}
+
+.game-mode-tag[data-on='true']::after {
+  content: none;
 }
 
 .connection-help,
@@ -760,6 +810,7 @@ input.eq-slider::-webkit-slider-thumb {
 @media (forced-colors: active) {
   button,
   .option,
+  .game-mode-tag,
   .battery-cell,
   .connection-status::before,
   input[type='range'],
@@ -774,9 +825,22 @@ input.eq-slider::-webkit-slider-thumb {
   button::after,
   .option::before,
   .option::after,
+  .game-mode-tag::before,
+  .game-mode-tag::after,
   .rename-dialog::before,
   .rename-dialog::after {
     content: none;
+  }
+
+  .game-mode-tag {
+    border: 1px solid GrayText;
+    color: GrayText;
+  }
+
+  .game-mode-tag[data-on='true'] {
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
   }
 
   button,
